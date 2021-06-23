@@ -2,7 +2,7 @@ resources:
 #- argocd/ace/cicd.yaml
 #- argocd/ace/dev.yaml
 #- argocd/ace/stage.yaml
-- argocd/ace/prod.yaml
+#- argocd/ace/prod.yaml
 
 #- argocd/mq/cicd.yaml
 #- argocd/mq/dev.yaml
