@@ -6,6 +6,8 @@ metadata:
 spec:
   sourceRepos:
   - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops.git
+  - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
+  # Do not change the below repository URL
   - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
   destinations:
   - namespace: tools
