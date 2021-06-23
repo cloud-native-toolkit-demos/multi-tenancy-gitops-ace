@@ -47,10 +47,21 @@ echo TARGET_CLUSTER=${TARGET_CLUSTER}
 oc apply -n openshift-gitops -f ${TARGET_CLUSTER}
 ```
 
-## Install Cloud Pak ## 
-Create sealedsecret containing the IBM Entitlement Key
+## Apply demo sealedsecret key to all clusters
+Download [sealed-secrets-ibm-demo-key.yaml](https://bit.ly/demo-sealed-master) and apply it to the cluster.
+```
+oc apply -f sealed-secrets-ibm-demo-key.yaml
+
+oc delete pod -n sealed-secrets -l app.kubernetes.io/name=sealed-secrets
+```
+#DO NOT CHECK INTO GIT.   
+```
+rm sealed-secrets-ibm-demo-key.yaml
 ```
 
+For Cloud Pak to consume the entitlement key, restart the Platform Navigator pods
+```
+oc delete pod -n tools -l app.kubernetes.io/name=ibm-integration-platform-navigator
 ```
 
 
