@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: apps-ace-prod
+  name: apps-ace-prod-1
   annotations:
     argocd.argoproj.io/sync-wave: "300"
   finalizers:
