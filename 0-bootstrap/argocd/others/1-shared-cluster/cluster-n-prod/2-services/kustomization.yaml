@@ -10,7 +10,7 @@ resources:
 #- argocd/operators/ibm-mq-operator.yaml
 #- argocd/operators/ibm-opsdashboard-operator.yaml
 - argocd/operators/ibm-platform-navigator.yaml
-#- argocd/instances/ibm-platform-navigator-instance.yaml
+- argocd/instances/ibm-platform-navigator-instance.yaml
 
 # IBM Foundations / Common Services
 - argocd/operators/ibm-foundations.yaml
