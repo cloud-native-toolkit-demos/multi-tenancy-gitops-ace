@@ -16,7 +16,7 @@ resources:
 - argocd/operators/ibm-foundations.yaml
 
 # IBM Entitlement Key Secret for Platform Navigator in tools namespace
-- argocd/instances/shared-secret.yaml
+- argocd/instances/shared-secrets.yaml
 
 # IBM Catalogs
 - argocd/operators/ibm-catalogs.yaml
