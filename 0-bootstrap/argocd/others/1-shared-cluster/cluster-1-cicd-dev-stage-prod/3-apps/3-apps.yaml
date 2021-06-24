@@ -18,6 +18,8 @@ spec:
     server: https://kubernetes.default.svc
   - namespace: openshift-gitops
     server: https://kubernetes.default.svc
+  - namespace: soapserver
+    server: https://kubernetes.default.svc    
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only

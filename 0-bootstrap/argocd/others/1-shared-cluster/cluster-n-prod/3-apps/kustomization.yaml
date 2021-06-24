@@ -6,3 +6,5 @@ resources:
 #- argocd/apic/prod.yaml
 
 #- argocd/bookinfo/prod.yaml
+
+- argocd/soapserver/prod.yaml
