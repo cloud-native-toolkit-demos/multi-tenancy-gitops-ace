@@ -1,5 +1,5 @@
 resources:
-#- argocd/ace/prod.yaml
+- argocd/ace/prod.yaml
 
 #- argocd/mq/prod.yaml
 
