@@ -7,4 +7,4 @@ resources:
 
 #- argocd/bookinfo/prod.yaml
 
-- argocd/soapserver/prod.yaml
+- argocd/soapserver/soapserver.yaml

@@ -19,7 +19,4 @@ resources:
 #- argocd/bookinfo/stage.yaml
 #- argocd/bookinfo/prod.yaml
 
-#- argocd/soapserver/cicd.yaml
-#- argocd/soapserver/dev.yaml
-#- argocd/soapserver/stage.yaml
-- argocd/soapserver/prod.yaml
+- argocd/soapserver/soapserver.yaml
