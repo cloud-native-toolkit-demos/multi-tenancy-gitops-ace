@@ -8,7 +8,6 @@ oc new-project sealed-secrets
 
 oc apply -f sealed-secrets-ibm-demo-key.yaml
 
-oc delete pod -n sealed-secrets -l app.kubernetes.io/name=sealed-secrets
 ```
 # DO NOT CHECK INTO GIT.
 ```
