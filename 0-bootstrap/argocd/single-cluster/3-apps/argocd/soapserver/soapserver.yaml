@@ -13,7 +13,7 @@ spec:
   project: applications
   source:
     path: soapserver/config/argocd/soapserver
-    repoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-apps.git
+    repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
     targetRevision: master
   syncPolicy:
     automated:
