@@ -4,15 +4,11 @@ resources:
 - argocd/namespace-ci.yaml
 - argocd/namespace-dev.yaml
 - argocd/namespace-staging.yaml
-- argocd/namespace-istio-system.yaml
-- argocd/namespace-openldap.yaml
 - argocd/namespace-sealed-secrets.yaml
 - argocd/namespace-tools.yaml
+#- argocd/namespace-istio-system.yaml
+#- argocd/namespace-openldap.yaml
 #- argocd/namespace-openshift-storage.yaml
 #- argocd/operator-ocs.yaml
 #- argocd/refarch-infraconfig.yaml
 #- argocd/refarch-machinesets.yaml
-
-
-
-
