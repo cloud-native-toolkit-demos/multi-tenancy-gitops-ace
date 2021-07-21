@@ -12,8 +12,8 @@ spec:
     server: https://kubernetes.default.svc
   project: applications
   source:
-    path: ace/config/cicd/overlays
-    repoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-apps.git
+    path: ace/config/argocd/ci
+    repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
     targetRevision: master
   syncPolicy:
     automated:
