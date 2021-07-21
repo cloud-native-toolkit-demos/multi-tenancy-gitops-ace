@@ -8,7 +8,7 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: ci
+    namespace: openshift-gitops
     server: https://kubernetes.default.svc
   project: applications
   source:
