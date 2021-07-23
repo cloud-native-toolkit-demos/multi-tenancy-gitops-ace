@@ -9,8 +9,6 @@ spec:
   - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
   # Do not change the below repository URL
   - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
-  # Carlos testing
-  - https://github.com/csantanapr/test-sealed.git
   destinations:
   - namespace: tools
     server: https://kubernetes.default.svc
@@ -66,6 +64,8 @@ spec:
     kind: ClusterRoleBinding
   - group: "rbac.authorization.k8s.io"
     kind: ClusterRole
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
