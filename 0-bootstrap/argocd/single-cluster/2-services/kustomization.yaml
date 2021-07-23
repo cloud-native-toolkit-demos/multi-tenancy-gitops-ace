@@ -11,6 +11,7 @@ resources:
 #- argocd/operators/ibm-opsdashboard-operator.yaml
 - argocd/operators/ibm-platform-navigator.yaml
 - argocd/instances/ibm-platform-navigator-instance.yaml
+#- argocd/instances/ibm-platform-navigator2021-2-1-instance.yaml
 
 # IBM Foundations / Common Services
 - argocd/operators/ibm-foundations.yaml
@@ -32,7 +33,7 @@ resources:
 - argocd/instances/sealed-secrets-instance.yaml
 
 # CICD
-- argocd/operators/grafana-operator.yaml
+#- argocd/operators/grafana-operator.yaml
 #- argocd/instances/grafana-instance.yaml
 #- argocd/instances/artifactory.yaml
 #- argocd/instances/chartmuseum.yaml

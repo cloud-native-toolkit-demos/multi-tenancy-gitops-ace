@@ -20,6 +20,11 @@ spec:
     server: https://kubernetes.default.svc
   - namespace: openshift-gitops
     server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: "rbac.authorization.k8s.io"
+    kind: ClusterRole
+  - group: "rbac.authorization.k8s.io"
+    kind: ClusterRoleBinding
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
