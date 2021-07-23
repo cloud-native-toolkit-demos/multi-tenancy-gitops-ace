@@ -14,7 +14,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   project: services
   source:
-    path: shared/config/tools/shared/config/tools/instances/sonarqube
+    path: shared/config/tools/instances/sonarqube
     repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
     targetRevision: master
     helm:

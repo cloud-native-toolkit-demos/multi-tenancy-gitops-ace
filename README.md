@@ -21,6 +21,7 @@ To get started setup gitops operator and rbac on each cluster
 ```
 oc apply -f setup/ocp47/
 while ! kubectl wait --for=condition=Established crd applications.argoproj.io; do sleep 30; done
+oc apply -n openshift-operators -f https://raw.githubusercontent.com/cloud-native-toolkit/multi-tenancy-gitops-services/master/operators/openshift-pipelines/operator.yaml
 while ! oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=- ; do sleep 30; done
 ```
 
@@ -28,7 +29,7 @@ while ! oc extract secrets/openshift-gitops-cluster --keys=admin.password -n ope
 ```
 oc apply -f setup/ocp46/
 while ! kubectl wait --for=condition=Established crd applications.argoproj.io; do sleep 30;
-while ! oc extract secrets/openshift-cluster-cluster --keys=admin.password -n openshift-gitops --to=- ; do sleep 30; done
+while ! oc extract secrets/argocd-cluster-cluster --keys=admin.password -n openshift-gitops --to=- ; do sleep 30; done
 ```
 
 The `admin` and password should have printed with the previous command
