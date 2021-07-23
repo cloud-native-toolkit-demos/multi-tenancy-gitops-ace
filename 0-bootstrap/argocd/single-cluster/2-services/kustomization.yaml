@@ -32,7 +32,7 @@ resources:
 - argocd/instances/sealed-secrets-instance.yaml
 
 # CICD
-- argocd/operators/grafana.yaml
+- argocd/operators/grafana-operator.yaml
 #- argocd/instances/grafana-instance.yaml
 #- argocd/instances/artifactory.yaml
 #- argocd/instances/chartmuseum.yaml
