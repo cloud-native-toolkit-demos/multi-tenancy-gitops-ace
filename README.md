@@ -6,12 +6,12 @@ Download [sealed-secrets-ibm-demo-key.yaml](https://bit.ly/demo-sealed-master) a
 ```
 oc new-project sealed-secrets
 
-oc apply -f sealed-secrets-ibm-demo-key.yaml
+oc apply -f ~/Downloads/sealed-secrets-ibm-demo-key.yaml
 
 ```
 # DO NOT CHECK INTO GIT.
 ```
-rm sealed-secrets-ibm-demo-key.yaml
+rm ~/Downloads/sealed-secrets-ibm-demo-key.yaml
 ```
 
 ## Install OpenShfit GitOps (ArgoCD)
@@ -21,13 +21,14 @@ To get started setup gitops operator and rbac on each cluster
 ```
 oc apply -f setup/ocp47/
 while ! kubectl wait --for=condition=Established crd applications.argoproj.io; do sleep 30; done
-oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=-
+while ! oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=- ; do sleep 30; done
 ```
 
 - For OpenShift 4.6 use the following:
 ```
 oc apply -f setup/ocp46/
-while ! kubectl wait --for=condition=Established crd applications.argoproj.io; do sleep 30; done
+while ! kubectl wait --for=condition=Established crd applications.argoproj.io; do sleep 30;
+while ! oc extract secrets/openshift-cluster-cluster --keys=admin.password -n openshift-gitops --to=- ; do sleep 30; done
 ```
 
 Once ArgoCD is deploy get the `admin` password
@@ -55,11 +56,6 @@ Now apply the profile
 ```
 echo TARGET_CLUSTER=${TARGET_CLUSTER}
 oc apply -n openshift-gitops -f ${TARGET_CLUSTER}
-```
-
-For Cloud Pak to consume the entitlement key, restart the Platform Navigator pods
-```
-oc delete pod -n tools -l app.kubernetes.io/name=ibm-integration-platform-navigator
 ```
 
 
