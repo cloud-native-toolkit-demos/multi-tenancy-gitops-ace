@@ -28,7 +28,7 @@ while ! oc extract secrets/openshift-gitops-cluster --keys=admin.password -n ope
 - For OpenShift 4.6 use the following:
 ```
 oc apply -f setup/ocp46/
-while ! kubectl wait --for=condition=Established crd applications.argoproj.io; do sleep 30;
+while ! kubectl wait --for=condition=Established crd applications.argoproj.io; do sleep 30; done
 while ! oc extract secrets/argocd-cluster-cluster --keys=admin.password -n openshift-gitops --to=- ; do sleep 30; done
 ```
 

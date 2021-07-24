@@ -29,7 +29,6 @@ resources:
 
 # Sealed Secrets
 - argocd/operators/sealed-secrets.yaml
-- argocd/instances/sealed-secrets-instance.yaml
 
 # CICD
 #- argocd/operators/grafana.yaml

@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sealed-secrets-instance
+  name: ci-scc
   annotations:
     argocd.argoproj.io/sync-wave: "250"
-  labels:
-    gitops.tier.group: cntk
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: sealed-secrets
+    namespace: ci
     server: https://kubernetes.default.svc
   project: services
   source:
-    path: shared/config/tools/instances/sealed-secrets
+    path: shared/config/ci/instances/scc
     repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
     targetRevision: master
   syncPolicy:

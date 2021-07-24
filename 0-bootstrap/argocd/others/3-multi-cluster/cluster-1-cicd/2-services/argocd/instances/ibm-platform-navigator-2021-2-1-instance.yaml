@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sealed-secrets-instance
+  name: ibm-platform-navigator-instance
   annotations:
-    argocd.argoproj.io/sync-wave: "250"
+    argocd.argoproj.io/sync-wave: "270"
   labels:
-    gitops.tier.group: cntk
+    gitops.tier.group: ibm-cloudpak
 spec:
   destination:
-    namespace: sealed-secrets
+    namespace: tools
     server: https://kubernetes.default.svc
   project: services
   source:
-    path: shared/config/tools/instances/sealed-secrets
+    path: shared/config/tools/instances/ibm-platform-navigator-2021-2-1
     repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
     targetRevision: master
   syncPolicy:
