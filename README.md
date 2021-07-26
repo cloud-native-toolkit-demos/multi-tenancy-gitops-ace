@@ -53,7 +53,7 @@ while ! kubectl wait --for=condition=Established crd applications.argoproj.io; d
 while ! oc extract secrets/argocd-cluster-cluster --keys=admin.password -n openshift-gitops --to=- ; do sleep 30; done
 ```
 
-The `admin` and password should have printed with the previous command
+Open the ArgoCD UI from the OpenShift Console, then use `admin` as the username and password should have printed in the previous command
 
 
 ## Install the ArgoCD Application Bootstrap for Single Cluster Profile
