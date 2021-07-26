@@ -1,5 +1,26 @@
 # Cloud Native Toolkit Deployment Guides
 
+## Recommend git setup
+
+This is the top level gitops git repository that depends on the following git repositories:
+- https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps
+- https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra
+- https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services
+
+Setup a local git directory
+```bash
+git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git
+git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-infra.git multi-tenancy-gitops-ace/1-infra
+git clone https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services multi-tenancy-gitops-ace/2-services
+git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git multi-tenancy-gitops-ace/3-apps
+
+cd multi-tenancy-gitops-ace
+```
+
+You can open the directory with VSCode
+```bash
+code .
+```
 
 ## Apply demo sealedsecret key to all clusters
 Download [sealed-secrets-ibm-demo-key.yaml](https://bit.ly/demo-sealed-master) and apply it to the cluster.
