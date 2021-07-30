@@ -9,17 +9,27 @@ This is the top level gitops git repository that depends on the following git re
 
 Setup a local git directory
 ```bash
-git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git
-git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-infra.git multi-tenancy-gitops-ace/1-infra
-git clone https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services multi-tenancy-gitops-ace/2-services
-git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git multi-tenancy-gitops-ace/3-apps
+mkdir -p ace-production
+cd ace-production
 
-cd multi-tenancy-gitops-ace
+git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git gitops-0-bootstrap-ace
+git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-infra.git multi-tenancy-gitops-ace/1-infra gitops-1-infra
+git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-services.git multi-tenancy-gitops-ace/2-services gitops-2-services
+git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git multi-tenancy-gitops-ace/3-apps gitops-3-apps
+
+git clone git@github.com:cloud-native-toolkit-demos/ace-config.git src-ace-config
+git clone git@github.com:cloud-native-toolkit-demos/ace-customer-details.git src-ace-app-customer-details
+
 ```
-
 You can open the directory with VSCode
 ```bash
 code .
+```
+
+
+Change directory to this repository
+```
+cd gitops-0-bootstrap-ace
 ```
 
 ## Apply demo sealedsecret key to all clusters
@@ -41,9 +51,9 @@ To get started setup gitops operator and rbac on each cluster
 - For OpenShift 4.7+ use the following:
 ```
 oc apply -f setup/ocp47/
-while ! kubectl wait --for=condition=Established crd applications.argoproj.io; do sleep 30; done
+while ! kubectl wait --for=condition=Established crd applications.argoproj.io 2>/dev/null; do sleep 30; done
 oc apply -n openshift-operators -f https://raw.githubusercontent.com/cloud-native-toolkit/multi-tenancy-gitops-services/master/operators/openshift-pipelines/operator.yaml
-while ! oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=- ; do sleep 30; done
+while ! oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=- 2>/dev/null; do sleep 30; done
 ```
 
 - For OpenShift 4.6 use the following:
