@@ -13,9 +13,9 @@ mkdir -p ace-production
 cd ace-production
 
 git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git gitops-0-bootstrap-ace
-git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-infra.git multi-tenancy-gitops-ace/1-infra gitops-1-infra
-git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-services.git multi-tenancy-gitops-ace/2-services gitops-2-services
-git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git multi-tenancy-gitops-ace/3-apps gitops-3-apps
+git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-infra.git gitops-1-infra
+git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-services.git gitops-2-services
+git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git gitops-3-apps
 
 git clone git@github.com:cloud-native-toolkit-demos/ace-config.git src-ace-config
 git clone git@github.com:cloud-native-toolkit-demos/ace-customer-details.git src-ace-app-customer-details
