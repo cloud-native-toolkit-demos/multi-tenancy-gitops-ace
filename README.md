@@ -4,6 +4,8 @@
 
 This is the top level gitops git repository that depends on the following git repositories:
 - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps
+- https://github.com/cloud-native-toolkit-demos/ace-customer-details
+- https://github.com/cloud-native-toolkit-demos/ace-config
 - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra
 - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services
 
