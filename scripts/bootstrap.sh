@@ -82,40 +82,7 @@ fork_repos () {
 
 }
 
-create_argocd_git_override_configmap () {
-echo "Creating argocd-git-override configmap file ${OUTPUT_DIR}/argocd-git-override-configmap.yaml"
-pushd ${OUTPUT_DIR}
 
-cat <<EOF >argocd-git-override-configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: argocd-git-override
-  namespace: openshift-gitops
-data:
-  map.yaml: |-
-    map:
-    - upstreamRepoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git
-      originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-ace.git
-    - upstreamRepoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra.git
-      originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-infra.git
-    - upstreamRepoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
-      originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-services.git
-    - upstreamRepoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
-      originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-apps.git
-EOF
-
-popd
-}
-
-apply_argocd_git_override_configmap () {
-  echo "Applying ${OUTPUT_DIR}/argocd-git-override-configmap.yaml"
-  pushd ${OUTPUT_DIR}
-
-  oc apply -f argocd-git-override-configmap.yaml
-
-  popd
-}
 
 init_sealed_secrets () {
     echo "Intializing sealed secrets with file ${SEALED_SECRET_KEY_FILE}"
@@ -166,6 +133,39 @@ patch_argocd () {
   popd
 }
 
+create_argocd_git_override_configmap () {
+echo "Creating argocd-git-override configmap file ${OUTPUT_DIR}/argocd-git-override-configmap.yaml"
+pushd ${OUTPUT_DIR}
+
+cat <<EOF >argocd-git-override-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-git-override
+data:
+  map.yaml: |-
+    map:
+    - upstreamRepoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git
+      originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-ace.git
+    - upstreamRepoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra.git
+      originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-infra.git
+    - upstreamRepoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
+      originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-services.git
+    - upstreamRepoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
+      originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-apps.git
+EOF
+
+popd
+}
+
+apply_argocd_git_override_configmap () {
+  echo "Applying ${OUTPUT_DIR}/argocd-git-override-configmap.yaml"
+  pushd ${OUTPUT_DIR}
+
+  oc apply -n openshift-gitops -f argocd-git-override-configmap.yaml
+
+  popd
+}
 argocd_git_override () {
   echo "Deploying argocd-git-override webhook"
   oc apply -n openshift-gitops -f https://github.com/csantanapr/argocd-git-override/releases/download/v1.1.0/deployment.yaml
@@ -184,10 +184,6 @@ deploy_bootstrap_argocd () {
 
 fork_repos
 
-create_argocd_git_override_configmap
-
-apply_argocd_git_override_configmap
-
 init_sealed_secrets
 
 install_pipelines
@@ -197,6 +193,10 @@ install_argocd
 gen_argocd_patch
 
 patch_argocd
+
+create_argocd_git_override_configmap
+
+apply_argocd_git_override_configmap
 
 argocd_git_override
 
