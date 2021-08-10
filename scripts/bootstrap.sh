@@ -20,7 +20,7 @@ set -e
 if [[ $OC_VERSION_CHECK -ne 0 ]]; then
   echo "Please use oc client version 4.7 or 4.8 download from https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/ "
 fi
-exit 0
+
 
 if [[ -z ${GITHUB_USER} ]]; then
   echo "We recommend to create a new github organization for all your gitops repos"
@@ -108,11 +108,8 @@ install_pipelines () {
 install_argocd () {
     echo "Installing OpenShift GitOps Operator for OpenShift v4.7"
     pushd ${OUTPUT_DIR}
-
     oc apply -f gitops-0-bootstrap-ace/setup/ocp47/
     while ! kubectl wait --for=condition=Established crd applications.argoproj.io 2>/dev/null; do sleep 30; done
-    while ! oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=- 2>/dev/null; do sleep 30; done
-
     popd
 }
 
@@ -180,6 +177,7 @@ argocd_git_override () {
   oc apply -n openshift-gitops -f https://github.com/csantanapr/argocd-git-override/releases/download/v1.1.0/deployment.yaml
   oc apply -f https://github.com/csantanapr/argocd-git-override/releases/download/v1.1.0/webhook.yaml
   oc label ns openshift-gitops cntk=experiment --overwrite=true
+  sleep 10
   oc wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n openshift-gitops > /dev/null
 }
 
@@ -188,6 +186,12 @@ deploy_bootstrap_argocd () {
   pushd ${OUTPUT_DIR}
   oc apply -n openshift-gitops -f gitops-0-bootstrap-ace/${GITOPS_PROFILE}
   popd
+}
+
+print_argo_password () {
+    echo "Openshift Console UI: $(oc whoami --show-console)"
+    echo "Openshift GitOps UI: $(oc get route -n openshift-gitops openshift-gitops-server -o template --template='https://{{.spec.host}}')"
+    echo "Openshift GitOps Password: $(oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops)"
 }
 
 # main
@@ -211,6 +215,8 @@ apply_argocd_git_override_configmap
 argocd_git_override
 
 deploy_bootstrap_argocd
+
+print_argo_password
 
 exit 0
 
