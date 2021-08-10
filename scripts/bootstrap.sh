@@ -153,12 +153,14 @@ data:
     map:
     - upstreamRepoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git
       originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-ace.git
+      originBranch: ocp47-2021-2
     - upstreamRepoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra.git
       originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-infra.git
     - upstreamRepoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
       originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-services.git
     - upstreamRepoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
       originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-apps.git
+      originBranch: ocp47-2021-2
 EOF
 
 popd
