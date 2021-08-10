@@ -13,6 +13,15 @@ popd () {
     command popd "$@" > /dev/null
 }
 
+set +e
+oc version --client | grep '4.6\|4.8'
+OC_VERSION_CHECK=$?
+set -e
+if [[ $OC_VERSION_CHECK -ne 0 ]]; then
+  echo "Please use oc client version 4.7 or 4.8 download from https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/ "
+fi
+exit 0
+
 if [[ -z ${GITHUB_USER} ]]; then
   echo "We recommend to create a new github organization for all your gitops repos"
   echo "Setup a new organization on github https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/creating-a-new-organization-from-scratch"
@@ -171,6 +180,7 @@ argocd_git_override () {
   oc apply -n openshift-gitops -f https://github.com/csantanapr/argocd-git-override/releases/download/v1.1.0/deployment.yaml
   oc apply -f https://github.com/csantanapr/argocd-git-override/releases/download/v1.1.0/webhook.yaml
   oc label ns openshift-gitops cntk=experiment --overwrite=true
+  oc wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n openshift-gitops > /dev/null
 }
 
 deploy_bootstrap_argocd () {
