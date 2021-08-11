@@ -13,8 +13,8 @@ spec:
   project: infra
   source:
     path: consolenotification
-    repoURL: https://github.com/hollisc/multi-tenancy-gitops-infra
-    targetRevision: 162-consolenotification-chart-update
+    repoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra.git
+    targetRevision: master
   syncPolicy:
     automated:
       prune: true

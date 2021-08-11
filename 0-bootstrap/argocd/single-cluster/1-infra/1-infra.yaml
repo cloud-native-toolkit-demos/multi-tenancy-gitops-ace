@@ -7,7 +7,6 @@ spec:
   sourceRepos:
   - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git
   - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra.git
-  - https://github.com/hollisc/multi-tenancy-gitops-infra
   destinations:
   - namespace: ace
     server: https://kubernetes.default.svc
