@@ -14,7 +14,7 @@ resources:
 #- argocd/instances/ibm-platform-navigator2021-2-1-instance.yaml
 
 # IBM Foundations / Common Services
-#- argocd/operators/ibm-foundations.yaml
+- argocd/operators/ibm-foundations.yaml
 
 # IBM Entitlement Key Secret for Platform Navigator in tools namespace
 - argocd/instances/shared-secrets.yaml
