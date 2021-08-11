@@ -1,6 +1,6 @@
 resources:
 # IBM Software
-#- argocd/operators/ibm-ace-operator.yaml
+- argocd/operators/ibm-ace-operator.yaml
 #- argocd/operators/ibm-apic-operator.yaml
 #- argocd/operators/ibm-aspera-operator.yaml
 #- argocd/operators/ibm-assetrepository-operator.yaml
