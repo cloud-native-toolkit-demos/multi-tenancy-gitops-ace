@@ -13,6 +13,8 @@ popd () {
     command popd "$@" > /dev/null
 }
 
+command -v gh >/dev/null 2>&1 || { echo >&2 "The Github CLI gh but it's not installed. Download https://github.com/cli/cli "; exit 1; }
+
 set +e
 oc version --client | grep '4.7\|4.8'
 OC_VERSION_CHECK=$?
@@ -50,42 +52,68 @@ fi
 
 GITOPS_PROFILE=${GITOPS_PROFILE:-0-bootstrap/argocd/single-cluster/bootstrap.yaml}
 
+GITOPS_BRANCH=${GITOPS_BRANCH=-ocp47-2021-2}
+
 fork_repos () {
     echo "Github user/org is ${GITHUB_USER}"
 
     pushd ${OUTPUT_DIR}
 
-    if [[ ! -d gitops-0-bootstrap-ace ]]; then
-      gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-ace --clone --org ${GITHUB_USER} --remote
+    GHREPONAME=$(gh api /repos/${GITHUB_USER}/multi-tenancy-gitops-ace -q .name || true)
+    if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-ace" ]]; then
+      echo "Fork not found, creating fork and cloning"
+      echo gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-ace --clone --org ${GITHUB_USER} --remote
       mv multi-tenancy-gitops-ace gitops-0-bootstrap-ace
-      cd gitops-0-bootstrap-ace
-      git remote set-url --push upstream no_push
-      cd ..
+    elif [[ ! -d gitops-0-bootstrap-ace ]]; then
+      echo "Fork found, repo not cloned, cloning repo"
+      gh repo clone ${GITHUB_USER}/multi-tenancy-gitops-ace gitops-0-bootstrap-ace
     fi
+    cd gitops-0-bootstrap-ace
+    git remote set-url --push upstream no_push
+    git checkout ${GITOPS_BRANCH}
+    cd ..
 
-    if [[ ! -d gitops-1-infra ]]; then
-      gh repo fork cloud-native-toolkit/multi-tenancy-gitops-infra --clone --org ${GITHUB_USER} --remote
-      mv multi-tenancy-gitops-infra gitops-1-infra
-      cd gitops-1-infra
-      git remote set-url --push upstream no_push
-      cd ..
-    fi
-
-    if [[ ! -d gitops-2-services ]]; then
-      gh repo fork cloud-native-toolkit/multi-tenancy-gitops-services --clone --org ${GITHUB_USER} --remote
-      mv multi-tenancy-gitops-services gitops-2-services
-      cd gitops-2-services
-      git remote set-url --push upstream no_push
-      cd ..
-    fi
-
-    if [[ ! -d gitops-3-apps ]]; then
-      gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-apps --clone --org ${GITHUB_USER} --remote
+    GHREPONAME=$(gh api /repos/${GITHUB_USER}/multi-tenancy-gitops-apps -q .name || true)
+    if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-apps" ]]; then
+      echo "Fork not found, creating fork and cloning"
+      echo gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-apps --clone --org ${GITHUB_USER} --remote
       mv multi-tenancy-gitops-apps gitops-3-apps
-      cd gitops-3-apps
-      git remote set-url --push upstream no_push
-      cd ..
+    elif [[ ! -d gitops-3-apps ]]; then
+      echo "Fork found, repo not cloned, cloning repo"
+      gh repo clone ${GITHUB_USER}/multi-tenancy-gitops-apps gitops-3-apps
     fi
+    cd gitops-3-apps
+    git remote set-url --push upstream no_push
+    git checkout ${GITOPS_BRANCH}
+    cd ..
+
+    GHREPONAME=$(gh api /repos/${GITHUB_USER}/multi-tenancy-gitops-infra -q .name || true)
+    if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-infra" ]]; then
+      echo "Fork not found, creating fork and cloning"
+      echo gh repo fork cloud-native-toolkit/multi-tenancy-gitops-infra --clone --org ${GITHUB_USER} --remote
+      mv multi-tenancy-gitops-infra gitops-1-infra
+    elif [[ ! -d gitops-1-infra ]]; then
+      echo "Fork found, repo not cloned, cloning repo"
+      gh repo clone ${GITHUB_USER}/multi-tenancy-gitops-apps gitops-1-infra
+    fi
+    cd gitops-1-infra
+    git remote set-url --push upstream no_push
+    git checkout ${GITOPS_BRANCH}
+    cd ..
+
+    GHREPONAME=$(gh api /repos/${GITHUB_USER}/multi-tenancy-gitops-services -q .name || true)
+    if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-services" ]]; then
+      echo "Fork not found, creating fork and cloning"
+      echo gh repo fork cloud-native-toolkit/multi-tenancy-gitops-services --clone --org ${GITHUB_USER} --remote
+      mv multi-tenancy-gitops-services gitops-2-services
+    elif [[ ! -d gitops-2-services ]]; then
+      echo "Fork found, repo not cloned, cloning repo"
+      gh repo clone ${GITHUB_USER}/multi-tenancy-gitops-apps gitops-2-services
+    fi
+    cd gitops-2-services
+    git remote set-url --push upstream no_push
+    git checkout ${GITOPS_BRANCH}
+    cd ..
 
     popd
 
@@ -154,14 +182,16 @@ data:
     map:
     - upstreamRepoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git
       originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-ace.git
-      originBranch: ocp47-2021-2
+      originBranch: ${GITOPS_BRANCH}
     - upstreamRepoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra.git
       originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-infra.git
+      originBranch: ${GITOPS_BRANCH}
     - upstreamRepoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
       originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-services.git
+      originBranch: ${GITOPS_BRANCH}
     - upstreamRepoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
       originRepoUrL: https://github.com/${GITHUB_USER}/multi-tenancy-gitops-apps.git
-      originBranch: ocp47-2021-2
+      originBranch: ${GITOPS_BRANCH}
 EOF
 
 popd
