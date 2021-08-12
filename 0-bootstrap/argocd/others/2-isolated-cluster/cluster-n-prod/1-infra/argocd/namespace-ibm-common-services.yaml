@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: namespace-staging
+  name: namespace-ibm-common-services
   annotations:
     argocd.argoproj.io/sync-wave: "100"
 spec:
   destination:
-    namespace: staging
+    namespace: ibm-common-services
     server: https://kubernetes.default.svc
   project: infra
   source:
