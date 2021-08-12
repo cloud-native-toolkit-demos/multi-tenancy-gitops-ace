@@ -52,7 +52,7 @@ fi
 
 GITOPS_PROFILE=${GITOPS_PROFILE:-0-bootstrap/argocd/single-cluster/bootstrap.yaml}
 
-GITOPS_BRANCH=${GITOPS_BRANCH=-ocp47-2021-2}
+GITOPS_BRANCH=${GITOPS_BRANCH:-ocp47-2021-2}
 
 fork_repos () {
     echo "Github user/org is ${GITHUB_USER}"
