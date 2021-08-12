@@ -70,7 +70,7 @@ fork_repos () {
     fi
     cd gitops-0-bootstrap-ace
     git remote set-url --push upstream no_push
-    git checkout --track origin/${GITOPS_BRANCH}
+    git checkout ${GITOPS_BRANCH}
     cd ..
 
     GHREPONAME=$(gh api /repos/${GITHUB_ORG}/multi-tenancy-gitops-apps -q .name || true)
@@ -84,7 +84,7 @@ fork_repos () {
     fi
     cd gitops-3-apps
     git remote set-url --push upstream no_push
-    git checkout --track origin/${GITOPS_BRANCH}
+    git checkout ${GITOPS_BRANCH}
     cd ..
 
     GHREPONAME=$(gh api /repos/${GITHUB_ORG}/multi-tenancy-gitops-infra -q .name || true)
@@ -98,7 +98,7 @@ fork_repos () {
     fi
     cd gitops-1-infra
     git remote set-url --push upstream no_push
-    git checkout --track origin/${GITOPS_BRANCH}
+    git checkout ${GITOPS_BRANCH}
     cd ..
 
     GHREPONAME=$(gh api /repos/${GITHUB_ORG}/multi-tenancy-gitops-services -q .name || true)
@@ -112,7 +112,7 @@ fork_repos () {
     fi
     cd gitops-2-services
     git remote set-url --push upstream no_push
-    git checkout --track origin/${GITOPS_BRANCH}
+    git checkout ${GITOPS_BRANCH}
     cd ..
 
     popd
