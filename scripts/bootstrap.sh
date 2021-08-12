@@ -62,7 +62,7 @@ fork_repos () {
     GHREPONAME=$(gh api /repos/${GITHUB_USER}/multi-tenancy-gitops-ace -q .name || true)
     if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-ace" ]]; then
       echo "Fork not found, creating fork and cloning"
-      echo gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-ace --clone --org ${GITHUB_USER} --remote
+      gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-ace --clone --org ${GITHUB_USER} --remote
       mv multi-tenancy-gitops-ace gitops-0-bootstrap-ace
     elif [[ ! -d gitops-0-bootstrap-ace ]]; then
       echo "Fork found, repo not cloned, cloning repo"
@@ -76,7 +76,7 @@ fork_repos () {
     GHREPONAME=$(gh api /repos/${GITHUB_USER}/multi-tenancy-gitops-apps -q .name || true)
     if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-apps" ]]; then
       echo "Fork not found, creating fork and cloning"
-      echo gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-apps --clone --org ${GITHUB_USER} --remote
+      gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-apps --clone --org ${GITHUB_USER} --remote
       mv multi-tenancy-gitops-apps gitops-3-apps
     elif [[ ! -d gitops-3-apps ]]; then
       echo "Fork found, repo not cloned, cloning repo"
@@ -90,7 +90,7 @@ fork_repos () {
     GHREPONAME=$(gh api /repos/${GITHUB_USER}/multi-tenancy-gitops-infra -q .name || true)
     if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-infra" ]]; then
       echo "Fork not found, creating fork and cloning"
-      echo gh repo fork cloud-native-toolkit/multi-tenancy-gitops-infra --clone --org ${GITHUB_USER} --remote
+      gh repo fork cloud-native-toolkit/multi-tenancy-gitops-infra --clone --org ${GITHUB_USER} --remote
       mv multi-tenancy-gitops-infra gitops-1-infra
     elif [[ ! -d gitops-1-infra ]]; then
       echo "Fork found, repo not cloned, cloning repo"
@@ -104,7 +104,7 @@ fork_repos () {
     GHREPONAME=$(gh api /repos/${GITHUB_USER}/multi-tenancy-gitops-services -q .name || true)
     if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-services" ]]; then
       echo "Fork not found, creating fork and cloning"
-      echo gh repo fork cloud-native-toolkit/multi-tenancy-gitops-services --clone --org ${GITHUB_USER} --remote
+      gh repo fork cloud-native-toolkit/multi-tenancy-gitops-services --clone --org ${GITHUB_USER} --remote
       mv multi-tenancy-gitops-services gitops-2-services
     elif [[ ! -d gitops-2-services ]]; then
       echo "Fork found, repo not cloned, cloning repo"
