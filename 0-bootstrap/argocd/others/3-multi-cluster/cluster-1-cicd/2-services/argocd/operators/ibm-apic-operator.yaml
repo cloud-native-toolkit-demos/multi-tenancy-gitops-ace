@@ -24,11 +24,11 @@ spec:
             ibmapic:
               name: ibm-apic
               subscription:
-                channel: v2.1-eus
+                channel: v2.3
                 installPlanApproval: Automatic
                 name: ibm-apiconnect
                 source: ibm-operator-catalog
-                sourceNamespace: openshift-marketplace        
+                sourceNamespace: openshift-marketplace
   syncPolicy:
     automated:
       prune: true

@@ -24,11 +24,11 @@ spec:
             ibmassetrepo:
               name: ibm-assetrepo
               subscription:
-                channel: v1.1-eus
+                channel: v1.3
                 installPlanApproval: Automatic
                 name: ibm-integration-asset-repository
                 source: ibm-operator-catalog
-                sourceNamespace: openshift-marketplace        
+                sourceNamespace: openshift-marketplace
   syncPolicy:
     automated:
       prune: true

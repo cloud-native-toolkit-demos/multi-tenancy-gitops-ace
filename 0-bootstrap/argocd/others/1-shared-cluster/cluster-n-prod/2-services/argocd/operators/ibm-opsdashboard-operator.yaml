@@ -24,11 +24,11 @@ spec:
             ibmopsdashboard:
               name: ibm-opsdashboard
               subscription:
-                channel: v2.1-eus
+                channel: v2.3
                 installPlanApproval: Automatic
                 name: ibm-integration-operations-dashboard
                 source: ibm-operator-catalog
-                sourceNamespace: openshift-marketplace          
+                sourceNamespace: openshift-marketplace
   syncPolicy:
     automated:
       prune: true

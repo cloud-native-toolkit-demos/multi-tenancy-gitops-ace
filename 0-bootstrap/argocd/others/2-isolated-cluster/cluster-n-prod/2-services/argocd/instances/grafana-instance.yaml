@@ -5,15 +5,15 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "250"
   labels:
-    gitops.tier.group: cntk      
+    gitops.tier.group: cntk
 spec:
   destination:
     namespace: tools
     server: https://kubernetes.default.svc
   project: services
   source:
-    path: shared/config/tools/instances/grafana
-    repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
+    path: instances/influxdb-grafana
+    repoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
     targetRevision: master
   syncPolicy:
     automated:

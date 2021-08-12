@@ -8,12 +8,12 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: prod
+    namespace: openshift-gitops
     server: https://kubernetes.default.svc
   project: applications
   source:
-    path: ace/environments/prod/overlays
-    repoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-apps.git
+    path: ace/config/argocd/prod
+    repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
     targetRevision: master
   syncPolicy:
     automated:
