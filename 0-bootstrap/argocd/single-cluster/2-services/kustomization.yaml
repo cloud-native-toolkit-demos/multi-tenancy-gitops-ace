@@ -31,6 +31,12 @@ resources:
 # Sealed Secrets
 - argocd/instances/sealed-secrets.yaml
 
+
+# TODO: Remove process mining
+- argocd/operators/ibm-automation-foundation-core-operator.yaml
+- argocd/operators/ibm-process-mining-operator.yaml
+- argocd/instances/ibm-process-mining-instance.yaml
+
 # CICD
 #- argocd/operators/grafana-operator.yaml
 #- argocd/instances/grafana-instance.yaml
