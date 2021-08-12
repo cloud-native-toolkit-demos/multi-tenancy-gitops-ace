@@ -22,7 +22,7 @@ spec:
         ibm-automation-foundation-core-operator:
           subscriptions:
             ibmautomation:
-              name: ibm-automation-foundation-core
+              name: ibm-automation-core-v1.1-ibm-operator-catalog-openshift-marketplace
               subscription:
                 channel: v1.1
                 installPlanApproval: Automatic
