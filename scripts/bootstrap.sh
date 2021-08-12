@@ -210,7 +210,7 @@ argocd_git_override () {
   oc apply -n openshift-gitops -f https://github.com/csantanapr/argocd-git-override/releases/download/v1.1.0/deployment.yaml
   oc apply -f https://github.com/csantanapr/argocd-git-override/releases/download/v1.1.0/webhook.yaml
   oc label ns openshift-gitops cntk=experiment --overwrite=true
-  sleep 10
+  sleep 5
   oc wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n openshift-gitops > /dev/null
 }
 
