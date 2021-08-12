@@ -14,7 +14,6 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
 - Setup a local git directory to clone all the git repositories
     ```bash
     mkdir -p ace-production
-    cd ace-production
     ```
 
 
@@ -27,11 +26,12 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
 
 - Open the ArgoCD UI from the OpenShift Console, then use `admin` as the username and password should have printed in the previous command
 
-- You can open the directory with VSCode
+- You can install a different cluster profile using `GITOPS_PROFILE` variable for example `GITOPS_PROFILE=0-bootstrap/argocd/others/3-multi-cluster/bootstrap-cluster-n-prod.yaml`
+
+- You can open the output directory with VSCode
     ```bash
     code ace-production
     ```
-- You can install a different cluster profile using `GITOPS_PROFILE` variable for example `GITOPS_PROFILE=0-bootstrap/argocd/others/3-multi-cluster/bootstrap-cluster-n-prod.yaml`
 
 - The following git repositories will be fork into a new github organization
     - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace
@@ -39,8 +39,6 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra
     - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services
 
-
-
-
-This repository shows the reference architecture for gitops directory structure for more info https://cloudnativetoolkit.dev/learning/gitops-int/gitops-with-cloud-native-toolkit
+### References
+- This repository shows the reference architecture for gitops directory structure for more info https://cloudnativetoolkit.dev/learning/gitops-int/gitops-with-cloud-native-toolkit
 
