@@ -7,6 +7,10 @@ metadata:
   labels:
     gitops.tier.group: ibm-cloudpak
 spec:
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
   destination:
     namespace: tools
     server: https://kubernetes.default.svc
@@ -14,8 +18,19 @@ spec:
   source:
     path: instances/ibm-platform-navigator-instance
     repoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
-    targetRevision: master
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    targetRevision: ocp47-2021-2
+    helm:
+      values: |
+        ibm-platform-navigator-instance:
+          ibmplatformnavigator:
+            name: integration-navigator
+            spec:
+              license:
+                accept: true
+                license: L-RJON-BZFQU2
+              mqDashboard: true
+              version: "2021.2.1"
+              replicas: 2
+              storage:
+                class: managed-nfs-storage
+

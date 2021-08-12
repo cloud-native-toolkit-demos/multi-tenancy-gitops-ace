@@ -16,7 +16,7 @@ spec:
   source:
     path: operators/grafana
     repoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
-    targetRevision: master
+    targetRevision: ocp47-2021-2
     helm:
       values: |
         grafana-operator:
@@ -28,7 +28,7 @@ spec:
                 installPlanApproval: Automatic
                 name: grafana-operator
                 source: community-operators
-                sourceNamespace: openshift-marketplace      
+                sourceNamespace: openshift-marketplace
   syncPolicy:
     automated:
       prune: true

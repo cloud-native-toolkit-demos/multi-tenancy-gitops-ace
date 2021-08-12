@@ -14,7 +14,7 @@ spec:
   source:
     path: shared/config/ci/instances/scc
     repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
-    targetRevision: master
+    targetRevision: ocp47-2021-2
   syncPolicy:
     automated:
       prune: true

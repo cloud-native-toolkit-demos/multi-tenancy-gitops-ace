@@ -18,7 +18,7 @@ spec:
   source:
     path: instances/ibm-platform-navigator-instance
     repoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services.git
-    targetRevision: master
+    targetRevision: ocp47-2021-2
     helm:
       values: |
         ibm-platform-navigator-instance:

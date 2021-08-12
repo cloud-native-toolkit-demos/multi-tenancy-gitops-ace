@@ -16,7 +16,7 @@ spec:
   source:
     path: shared/config/tools/instances/cloud-native-toolkit
     repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
-    targetRevision: master
+    targetRevision: ocp47-2021-2
   syncPolicy:
     automated:
       prune: true

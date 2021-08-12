@@ -14,7 +14,7 @@ spec:
   source:
     path: infraconfig
     repoURL: github.com/cloud-native-toolkit/multi-tenancy-gitops-infra.git
-    targetRevision: master
+    targetRevision: ocp47-2021-2
     helm:
       values: |
         refarch-infraconfig:
