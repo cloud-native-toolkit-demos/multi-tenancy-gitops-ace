@@ -1,94 +1,45 @@
 # Cloud Native Toolkit Deployment Guides
 
-## Recommend git setup
+This is demo gitops git repository for IBM Cloud Paks.
 
-This is the top level gitops git repository that depends on the following git repositories:
-- https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps
-- https://github.com/cloud-native-toolkit-demos/ace-customer-details
-- https://github.com/cloud-native-toolkit-demos/ace-config
-- https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra
-- https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services
+This demo repo have a default selection to deploy IBM App Connect (ACE).
 
-Setup a local git directory
-```bash
-mkdir -p ace-production
-cd ace-production
-
-git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git gitops-0-bootstrap-ace
-git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-infra.git gitops-1-infra
-git clone git@github.com:cloud-native-toolkit/multi-tenancy-gitops-services.git gitops-2-services
-git clone git@github.com:cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git gitops-3-apps
-
-git clone git@github.com:cloud-native-toolkit-demos/ace-config.git src-ace-config
-git clone git@github.com:cloud-native-toolkit-demos/ace-customer-details.git src-ace-app-customer-details
-
-```
-You can open the directory with VSCode
-```bash
-code .
-```
+### Prerequisites
+- Install the Github CLI and login https://github.com/cli/cli
+- Install the OpenShift CLI `oc` latest version 4.7 or 4.8
+- Create a new organization on github https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/creating-a-new-organization-from-scratch
 
 
-Change directory to this repository
-```
-cd gitops-0-bootstrap-ace
-```
-
-## Apply demo sealedsecret key to all clusters
-Download [sealed-secrets-ibm-demo-key.yaml](https://bit.ly/demo-sealed-master) and apply it to the cluster.
-```
-oc new-project sealed-secrets
-
-oc apply -f ~/Downloads/sealed-secrets-ibm-demo-key.yaml
-
-```
-# DO NOT CHECK INTO GIT.
-```
-rm ~/Downloads/sealed-secrets-ibm-demo-key.yaml
-```
-
-## Install OpenShfit GitOps (ArgoCD)
-To get started setup gitops operator and rbac on each cluster
-
-- For OpenShift 4.7+ use the following:
-```
-oc apply -f setup/ocp47/
-while ! kubectl wait --for=condition=Established crd applications.argoproj.io 2>/dev/null; do sleep 30; done
-oc apply -n openshift-operators -f https://raw.githubusercontent.com/cloud-native-toolkit/multi-tenancy-gitops-services/master/operators/openshift-pipelines/operator.yaml
-while ! oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=- 2>/dev/null; do sleep 30; done
-```
-
-- For OpenShift 4.6 use the following:
-```
-oc apply -f setup/ocp46/
-while ! kubectl wait --for=condition=Established crd applications.argoproj.io; do sleep 30; done
-while ! oc extract secrets/argocd-cluster-cluster --keys=admin.password -n openshift-gitops --to=- ; do sleep 30; done
-```
-
-Open the ArgoCD UI from the OpenShift Console, then use `admin` as the username and password should have printed in the previous command
+### Setup
+- Setup a local git directory to clone all the git repositories
+    ```bash
+    mkdir -p ace-production
+    cd ace-production
+    ```
 
 
-## Install the ArgoCD Application Bootstrap for Single Cluster Profile
-Apply the bootstrap profile, to use the default `single-cluster` scenario use the following command:
-```
-oc apply -n openshift-gitops -f 0-bootstrap/argocd/bootstrap.yaml
-```
+- Download [sealed-secrets-ibm-demo-key.yaml](https://bit.ly/demo-sealed-master) and save in the default location `~/Downloads/sealed-secrets-ibm-demo-key.yaml`. You can override the location when running the script with `SEALED_SECRET_KEY_FILE`. Remember do not check this file to git.
+
+- Run the bootstrap script, specify the git org `GITHUB_ORG` and the output directory to clone all repos `OUTPUT_DIR`. You can use `DEBUG=true` for verbose output
+    ```bash
+    curl -sfL https://raw.githubusercontent.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace/ocp47-2021-2/scripts/bootstrap.sh | DEBUG=true GITHUB_ORG=<YOUR_GITHUB_ORG> OUTPUT_DIR=ace-production bash
+    ```
+
+- Open the ArgoCD UI from the OpenShift Console, then use `admin` as the username and password should have printed in the previous command
+
+- You can open the directory with VSCode
+    ```bash
+    code ace-production
+    ```
+- You can install a different cluster profile using `GITOPS_PROFILE` variable for example `GITOPS_PROFILE=0-bootstrap/argocd/others/3-multi-cluster/bootstrap-cluster-n-prod.yaml`
+
+- The following git repositories will be fork into a new github organization
+    - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace
+    - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps
+    - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra
+    - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services
 
 
-## Other Cluster profiles
-For other profile clusters set environment variable `TARGET_CLUSTER` then apply the profile
-
-**shared-cluster**:
-```
-TARGET_CLUSTER=0-bootstrap/argocd/others/1-shared-cluster/bootstrap-cluster-1-cicd-dev-stage-prod.yaml
-
-TARGET_CLUSTER=0-bootstrap/argocd/others/1-shared-cluster/bootstrap-cluster-n-prod.yaml
-```
-Now apply the profile
-```
-echo TARGET_CLUSTER=${TARGET_CLUSTER}
-oc apply -n openshift-gitops -f ${TARGET_CLUSTER}
-```
 
 
 This repository shows the reference architecture for gitops directory structure for more info https://cloudnativetoolkit.dev/learning/gitops-int/gitops-with-cloud-native-toolkit
