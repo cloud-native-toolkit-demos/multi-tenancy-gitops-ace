@@ -9,11 +9,14 @@ resources:
 #- argocd/operators/ibm-eventstreams-operator.yaml
 #- argocd/operators/ibm-mq-operator.yaml
 #- argocd/operators/ibm-opsdashboard-operator.yaml
+#- argocd/operators/ibm-process-mining-operator.yaml
+#- argocd/instances/ibm-process-mining-instance.yaml
 - argocd/operators/ibm-platform-navigator.yaml
 - argocd/instances/ibm-platform-navigator-instance.yaml
 
 # IBM Foundations / Common Services
 - argocd/operators/ibm-foundations.yaml
+- argocd/operators/ibm-automation-foundation-core-operator.yaml
 
 # IBM Entitlement Key Secret for Platform Navigator in tools namespace
 - argocd/instances/shared-secrets.yaml
@@ -31,7 +34,7 @@ resources:
 - argocd/instances/sealed-secrets.yaml
 
 # CICD
-#- argocd/operators/grafana.yaml
+#- argocd/operators/grafana-operator.yaml
 #- argocd/instances/grafana-instance.yaml
 #- argocd/instances/artifactory.yaml
 #- argocd/instances/chartmuseum.yaml
@@ -40,8 +43,9 @@ resources:
 #- argocd/instances/sonarqube.yaml
 #- argocd/instances/pact-broker.yaml
 #- argocd/instances/cntk-pipeline-tasks.yaml
-# In OCP 4.7+ we need to install openshift-pipelines
+# In OCP 4.7+ we need to install openshift-pipelines and possibly privileged scc to the pipeline serviceaccount
 #- argocd/operators/openshift-pipelines.yaml
+- argocd/instances/ci-scc.yaml
 
 # Service Mesh
 #- argocd/operators/elasticsearch.yaml
