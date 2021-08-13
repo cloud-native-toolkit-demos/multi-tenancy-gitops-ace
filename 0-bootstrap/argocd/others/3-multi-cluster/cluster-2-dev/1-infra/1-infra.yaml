@@ -60,7 +60,7 @@ spec:
   destination:
     namespace: openshift-gitops
     server: https://kubernetes.default.svc
-  project: default
+  project: infra
   source:
     path: 0-bootstrap/argocd/others/3-multi-cluster/cluster-2-dev/1-infra
     repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git

@@ -85,7 +85,7 @@ spec:
   destination:
     namespace: openshift-gitops
     server: https://kubernetes.default.svc
-  project: default
+  project: services
   source:
     path: 0-bootstrap/argocd/others/3-multi-cluster/cluster-1-cicd/2-services
     repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace.git
