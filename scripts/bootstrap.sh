@@ -28,31 +28,30 @@ if [[ -z ${GITHUB_ORG} ]]; then
   echo "We recommend to create a new github organization for all your gitops repos"
   echo "Setup a new organization on github https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/creating-a-new-organization-from-scratch"
   echo "Please set the environment variable GITHUB_ORG when running the script like:"
-  echo "GITHUB_ORG=acme-org OUTPUT_DIR=gitops-production ./bootstrap.sh"
+  echo "GITHUB_ORG=acme-org OUTPUT_DIR=gitops-production ./scripts/bootstrap.sh"
 
   exit 1
 fi
 
 if [[ -z ${OUTPUT_DIR} ]]; then
   echo "Please set the environment variable OUTPUT_DIR when running the script like:"
-  echo "GITHUB_ORG=acme-org OUTPUT_DIR=gitops-production ./bootstrap.sh"
+  echo "GITHUB_ORG=acme-org OUTPUT_DIR=gitops-production ./scripts/bootstrap.sh"
 
   exit 1
 fi
 mkdir -p "${OUTPUT_DIR}"
 
 
-SEALED_SECRET_KEY_FILE=${SEALED_SECRET_KEY_FILE:-~/Downloads/sealed-secrets-ibm-demo-key.yaml}
-
-if [[ ! -f ${SEALED_SECRET_KEY_FILE} ]]; then
-  echo "File Not Found: ${SEALED_SECRET_KEY_FILE}"
-
+if [[ -z "${IBM_ENTITLEMENT_KEY}" ]]; then
+  echo "Please pass the environment variable IBM_ENTITLEMENT_KEY"
   exit 1
 fi
 
 GITOPS_PROFILE=${GITOPS_PROFILE:-0-bootstrap/argocd/single-cluster/bootstrap.yaml}
 
 GITOPS_BRANCH=${GITOPS_BRANCH:-ocp47-2021-2}
+
+IBM_IMAGE_REGISTRY=${IBM_IMAGE_REGISTRY:-cp.icr.io}
 
 fork_repos () {
     echo "Github user/org is ${GITHUB_ORG}"
@@ -120,13 +119,6 @@ fork_repos () {
 }
 
 
-
-init_sealed_secrets () {
-    echo "Intializing sealed secrets with file ${SEALED_SECRET_KEY_FILE}"
-    oc new-project sealed-secrets || true
-
-    oc apply -f ${SEALED_SECRET_KEY_FILE}
-}
 
 install_pipelines () {
   echo "Installing OpenShift Pipelines Operator"
@@ -225,13 +217,37 @@ print_argo_password () {
     echo "Openshift Console UI: $(oc whoami --show-console)"
     echo "Openshift GitOps UI: $(oc get route -n openshift-gitops openshift-gitops-server -o template --template='https://{{.spec.host}}')"
     echo "Openshift GitOps Password: $(oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=-)"
+    echo "To get the ArgoCD password again run oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=-"
+}
+
+update_pull_secret () {
+  WORKDIR=$(mktemp -d)
+  # extract using oc get secret
+  oc get secret/pull-secret -n openshift-config --template='{{index .data ".dockerconfigjson" | base64decode}}' >${WORKDIR}/.dockerconfigjson
+  ls -l ${WORKDIR}/.dockerconfigjson
+
+  # or extract using oc extract
+  #oc extract secret/pull-secret --keys .dockerconfigjson -n openshift-config --confirm --to=./foo
+  #ls -l ${WORKDIR}/.dockerconfigjson
+
+  # merge a new entry into existing file
+  oc registry login --registry="${IBM_IMAGE_REGISTRY}" --auth-basic="cp:${IBM_ENTITLEMENT_KEY}" --to=${WORKDIR}/.dockerconfigjson
+  #cat ${WORKDIR}/.dockerconfigjson
+
+  # write back into cluster, but is better to save it to gitops repo :-)
+  oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=${WORKDIR}/.dockerconfigjson
+
+  # get back the yaml merged to save it in gitops git repo to be deploy with ArgoCD
+  #oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=${WORKDIR}/.dockerconfigjson  --dry-run=client -o yaml
 }
 
 # main
 
 fork_repos
 
-init_sealed_secrets
+update_pull_secret
+
+
 
 install_pipelines
 
