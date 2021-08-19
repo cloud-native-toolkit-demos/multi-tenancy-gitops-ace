@@ -264,12 +264,30 @@ init_sealed_secrets () {
 ace_setup_apps_git () {
   echo "Github user/org is ${GITHUB_ORG}"
 
+  if [ -z ${GITHUB_ORG} ]; then echo "Please set GITHUB_ORG when running script"; exit 1; fi=
+  GIT_USER="${GITHUB_ORG}"
+
   pushd ${OUTPUT_DIR}
 
-  source gitops-0-bootstrap-ace/ace/scripts/
+  source gitops-0-bootstrap-ace/ace/scripts/ace-update-git.sh
 
   popd
 
+}
+
+ace_setup_kubeseal () {
+  echo "Running kubeseal for apps repo"
+
+  if [ -z ${GITHUB_ORG} ]; then echo "Please set GITHUB_ORG when running script"; exit 1; fi=
+  GIT_USER="${GITHUB_ORG}"
+
+  if [ -z ${GIT_TOKEN} ]; then echo "Please set GIT_TOKEN when running script"; exit 1; fi
+
+  pushd ${OUTPUT_DIR}
+
+  source gitops-0-bootstrap-ace/ace/scripts/ace-kubeseal.sh
+
+  popd
 }
 
 # main
