@@ -42,16 +42,13 @@ fi
 mkdir -p "${OUTPUT_DIR}"
 
 
-if [[ -z "${IBM_ENTITLEMENT_KEY}" ]]; then
-  echo "Please pass the environment variable IBM_ENTITLEMENT_KEY"
-  exit 1
-fi
+
 
 GITOPS_PROFILE=${GITOPS_PROFILE:-0-bootstrap/argocd/single-cluster/bootstrap.yaml}
 
 GITOPS_BRANCH=${GITOPS_BRANCH:-ocp47-2021-2}
 
-IBM_IMAGE_REGISTRY=${IBM_IMAGE_REGISTRY:-cp.icr.io}
+IBM_CP_IMAGE_REGISTRY=${IBM_CP_IMAGE_REGISTRY:-cp.icr.io}
 
 fork_repos () {
     echo "Github user/org is ${GITHUB_ORG}"
@@ -221,33 +218,69 @@ print_argo_password () {
 }
 
 update_pull_secret () {
+  if [[ -z "${IBM_ENTITLEMENT_KEY}" ]]; then
+    echo "Please pass the environment variable IBM_ENTITLEMENT_KEY"
+    exit 1
+  fi
   WORKDIR=$(mktemp -d)
   # extract using oc get secret
   oc get secret/pull-secret -n openshift-config --template='{{index .data ".dockerconfigjson" | base64decode}}' >${WORKDIR}/.dockerconfigjson
   ls -l ${WORKDIR}/.dockerconfigjson
 
   # or extract using oc extract
+  #oc extract secret/pull-secret --keys .dockerconfigjson -n openshift-config --confirm --to=-
   #oc extract secret/pull-secret --keys .dockerconfigjson -n openshift-config --confirm --to=./foo
   #ls -l ${WORKDIR}/.dockerconfigjson
 
   # merge a new entry into existing file
-  oc registry login --registry="${IBM_IMAGE_REGISTRY}" --auth-basic="cp:${IBM_ENTITLEMENT_KEY}" --to=${WORKDIR}/.dockerconfigjson
+  oc registry login --registry="${IBM_CP_IMAGE_REGISTRY}" --auth-basic="cp:${IBM_ENTITLEMENT_KEY}" --to=${WORKDIR}/.dockerconfigjson
   #cat ${WORKDIR}/.dockerconfigjson
 
   # write back into cluster, but is better to save it to gitops repo :-)
   oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=${WORKDIR}/.dockerconfigjson
 
+  # TODO: Check if reboot is done automatically?
+
   # get back the yaml merged to save it in gitops git repo to be deploy with ArgoCD
   #oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=${WORKDIR}/.dockerconfigjson  --dry-run=client -o yaml
+}
+
+init_sealed_secrets () {
+
+  SEALED_SECRET_KEY_FILE=${SEALED_SECRET_KEY_FILE:-~/Downloads/sealed-secrets-ibm-demo-key.yaml}
+
+  if [[ ! -f ${SEALED_SECRET_KEY_FILE} ]]; then
+    echo "File Not Found: ${SEALED_SECRET_KEY_FILE}"
+    echo "Please pass the environment variable SEALED_SECRET_KEY_FILE and make sure it points to an existing file"
+    exit 1
+  fi
+
+  echo "Intializing sealed secrets with file ${SEALED_SECRET_KEY_FILE}"
+  oc new-project sealed-secrets || true
+  oc apply -f ${SEALED_SECRET_KEY_FILE}
+
+}
+
+ace_setup_apps_git () {
+  echo "Github user/org is ${GITHUB_ORG}"
+
+  pushd ${OUTPUT_DIR}
+
+  source gitops-0-bootstrap-ace/ace/scripts/
+
+  popd
+
 }
 
 # main
 
 fork_repos
 
-update_pull_secret
 
+# Only applicable when workers reload automatically
+# update_pull_secret
 
+init_sealed_secrets
 
 install_pipelines
 
@@ -266,6 +299,12 @@ argocd_git_override
 deploy_bootstrap_argocd
 
 print_argo_password
+
+# Setup of apps repo
+
+ace_setup_apps_git
+
+ace_setup_kubeseal
 
 exit 0
 
