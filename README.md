@@ -33,6 +33,7 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     GIT_ORG=$REPLACE_WITH_GIT_ORG \
     GIT_TOKEN=$REPLACE_WITH_GIT_TOKEN \
     OUTPUT_DIR=ace-production \
+    GITOPS_PROFILE=0-bootstrap/argocd/single-cluster/bootstrap.yaml \
     sh ./scripts/bootstrap.sh
     ```
 
