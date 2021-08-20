@@ -210,11 +210,13 @@ deploy_bootstrap_argocd () {
   popd
 }
 
-print_argo_password () {
+print_urls_passwords () {
     echo "Openshift Console UI: $(oc whoami --show-console)"
     echo "Openshift GitOps UI: $(oc get route -n openshift-gitops openshift-gitops-server -o template --template='https://{{.spec.host}}')"
-    echo "Openshift GitOps Password: $(oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=-)"
-    echo "To get the ArgoCD password again run oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=-"
+    echo "To get the ArgoCD admin password:"
+    echo "-----"
+    echo "oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=-"
+    echo "-----"
 }
 
 update_pull_secret () {
@@ -264,28 +266,28 @@ init_sealed_secrets () {
 ace_setup_apps_git () {
   echo "Github user/org is ${GITHUB_ORG}"
 
-  if [ -z ${GITHUB_ORG} ]; then echo "Please set GITHUB_ORG when running script"; exit 1; fi=
+  if [ -z ${GITHUB_ORG} ]; then echo "Please set GITHUB_ORG when running script"; exit 1; fi
   GIT_USER="${GITHUB_ORG}"
 
   pushd ${OUTPUT_DIR}
 
-  source gitops-0-bootstrap-ace/ace/scripts/ace-update-git.sh
+  source gitops-3-apps/scripts/ace-update-git.sh
 
   popd
 
 }
 
-ace_setup_kubeseal () {
+ace_setup_apps_kubeseal () {
   echo "Running kubeseal for apps repo"
 
-  if [ -z ${GITHUB_ORG} ]; then echo "Please set GITHUB_ORG when running script"; exit 1; fi=
+  if [ -z ${GITHUB_ORG} ]; then echo "Please set GITHUB_ORG when running script"; exit 1; fi
   GIT_USER="${GITHUB_ORG}"
 
   if [ -z ${GIT_TOKEN} ]; then echo "Please set GIT_TOKEN when running script"; exit 1; fi
 
   pushd ${OUTPUT_DIR}
 
-  source gitops-0-bootstrap-ace/ace/scripts/ace-kubeseal.sh
+  source gitops-3-apps/scripts/ace-kubeseal.sh
 
   popd
 }
@@ -316,13 +318,13 @@ argocd_git_override
 
 deploy_bootstrap_argocd
 
-print_argo_password
-
 # Setup of apps repo
 
 ace_setup_apps_git
 
-ace_setup_kubeseal
+ace_setup_apps_kubeseal
+
+print_urls_passwords
 
 exit 0
 
