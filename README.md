@@ -32,9 +32,8 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     curl -sfL https://raw.githubusercontent.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace/ocp47-2021-2/scripts/bootstrap.sh | \
     GIT_ORG=$REPLACE_WITH_GIT_ORG \
     GIT_TOKEN=$REPLACE_WITH_GIT_TOKEN \
-    OUTPUT_DIR=ace-production \
-    GITOPS_PROFILE=0-bootstrap/argocd/single-cluster/bootstrap.yaml \
-    sh ./scripts/bootstrap.sh
+    OUTPUT_DIR=scripts/test \
+    sh
     ```
 
 - When the script is done it prints the ArgoCD UI url that you can open in your browser. To login use the user name `admin` and to get the password use the following command:
@@ -46,8 +45,6 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     ```bash
     code ace-production
     ```
-
-- You can install a different cluster profile using `GITOPS_PROFILE` variable for example `GITOPS_PROFILE=0-bootstrap/argocd/others/3-multi-cluster/bootstrap-cluster-n-prod.yaml`
 
 
 - The following git repositories will be fork into a new github organization
