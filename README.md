@@ -22,8 +22,10 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
 
 - Download [sealed-secrets-ibm-demo-key.yaml](https://bit.ly/demo-sealed-master) and save in the default location `~/Downloads/sealed-secrets-ibm-demo-key.yaml`. You can override the location when running the script with `SEALED_SECRET_KEY_FILE`. Remember do not check this file to git.
 
-- Create a personal access token for github
-
+- Make sure you are connected to the correct OpenShift cluster
+    ```bash
+    oc whoami --show-console
+    ```
 
 - Run the bootstrap script, specify the git org `GIT_ORG`,the Github personal access token `GIT_TOKEN` and the output directory to clone all repos `OUTPUT_DIR`.You can use `DEBUG=true` for verbose output
     ```bash
