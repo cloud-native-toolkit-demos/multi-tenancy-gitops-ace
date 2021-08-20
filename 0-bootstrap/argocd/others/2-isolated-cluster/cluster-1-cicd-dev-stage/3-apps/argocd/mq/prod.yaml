@@ -1,19 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: apps-bookinfo-prod
+  name: apps-mq-prod
   annotations:
     argocd.argoproj.io/sync-wave: "300"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: prod
+    namespace: openshift-gitops
     server: https://kubernetes.default.svc
   project: applications
   source:
-    path: bookinfo/environments/prod/overlays
-    repoURL: https://github.com/cloud-native-toolkit/multi-tenancy-gitops-apps.git
+    path: mq/config/argocd/prod
+    repoURL: https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps.git
     targetRevision: ocp47-2021-2
   syncPolicy:
     automated:

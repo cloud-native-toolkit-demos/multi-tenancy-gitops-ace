@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ibm-platform-foundation-instance
+  name: ibm-foundational-services-instance
   annotations:
     argocd.argoproj.io/sync-wave: "220"
   labels:
