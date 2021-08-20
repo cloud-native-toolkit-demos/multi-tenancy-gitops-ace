@@ -16,6 +16,7 @@ resources:
 
 # IBM Foundations / Common Services
 - argocd/operators/ibm-foundations.yaml
+- argocd/instances/ibm-foundational-services-instance.yaml
 - argocd/operators/ibm-automation-foundation-core-operator.yaml
 
 # IBM Entitlement Key Secret for Platform Navigator in tools namespace
