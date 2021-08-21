@@ -73,7 +73,7 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     oc extract secrets/openshift-gitops-cntk-cluster --keys=admin.password -n openshift-gitops --to=-
     echo "----"
     echo "The Cloud Pak console and admin password"
-    oc get route -n ibm-common-services cp-console -o template --template='https://{{.spec.host}}'
+    oc get route -n tools integration-navigator-pn -o template --template='https://{{.spec.host}}'
     oc extract -n ibm-common-services secrets/platform-auth-idp-credentials --keys=admin_username,admin_password --to=-
     ```
 
