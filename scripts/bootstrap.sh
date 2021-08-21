@@ -316,10 +316,11 @@ ace_setup_apps_kubeseal () {
 
 print_urls_passwords () {
     echo "Openshift Console UI: $(oc whoami --show-console)"
-    echo "Openshift GitOps UI: $(oc get route -n openshift-gitops openshift-gitops-server -o template --template='https://{{.spec.host}}')"
-    echo "To get the ArgoCD admin password:"
+    echo "Openshift GitOps UI: $(oc get route -n openshift-gitops openshift-gitops-cntk-cluster -o template --template='https://{{.spec.host}}')"
+    echo "To get the ArgoCD URL and admin password:"
     echo "-----"
-    echo "oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=-"
+    echo "oc get route -n openshift-gitops openshift-gitops-cntk-cluster -o template --template='https://{{.spec.host}}'"
+    echo "oc extract secrets/openshift-gitops-cntk-cluster --keys=admin.password -n openshift-gitops --to=-"
     echo "-----"
 }
 
