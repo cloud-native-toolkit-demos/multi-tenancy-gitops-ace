@@ -19,7 +19,7 @@ set +e
 oc version --client | grep '4.7\|4.8'
 OC_VERSION_CHECK=$?
 set -e
-if [[ $OC_VERSION_CHECK -ne 0 ]]; then
+if [[ ${OC_VERSION_CHECK} -ne 0 ]]; then
   echo "Please use oc client version 4.7 or 4.8 download from https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/ "
 fi
 
@@ -50,6 +50,8 @@ if [[ ! -f ${SEALED_SECRET_KEY_FILE} ]]; then
   exit 1
 fi
 
+CP_EXAMPLES=${CP_EXAMPLES:-true}
+
 GITOPS_PROFILE=${GITOPS_PROFILE:-0-bootstrap/argocd/single-cluster/bootstrap.yaml}
 
 GITOPS_BRANCH=${GITOPS_BRANCH:-ocp47-2021-2}
@@ -71,20 +73,6 @@ fork_repos () {
       gh repo clone ${GIT_ORG}/multi-tenancy-gitops-ace gitops-0-bootstrap-ace
     fi
     cd gitops-0-bootstrap-ace
-    git remote set-url --push upstream no_push
-    git checkout ${GITOPS_BRANCH} || git checkout --track origin/${GITOPS_BRANCH}
-    cd ..
-
-    GHREPONAME=$(gh api /repos/${GIT_ORG}/multi-tenancy-gitops-apps -q .name || true)
-    if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-apps" ]]; then
-      echo "Fork not found, creating fork and cloning"
-      gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-apps --clone --org ${GIT_ORG} --remote
-      mv multi-tenancy-gitops-apps gitops-3-apps
-    elif [[ ! -d gitops-3-apps ]]; then
-      echo "Fork found, repo not cloned, cloning repo"
-      gh repo clone ${GIT_ORG}/multi-tenancy-gitops-apps gitops-3-apps
-    fi
-    cd gitops-3-apps
     git remote set-url --push upstream no_push
     git checkout ${GITOPS_BRANCH} || git checkout --track origin/${GITOPS_BRANCH}
     cd ..
@@ -117,6 +105,39 @@ fork_repos () {
     git checkout ${GITOPS_BRANCH} || git checkout --track origin/${GITOPS_BRANCH}
     cd ..
 
+    if [[ "${CP_EXAMPLES}" == "true" ]]; then
+      echo "Creating repos for Cloud Pak examples"
+
+      GHREPONAME=$(gh api /repos/${GIT_ORG}/multi-tenancy-gitops-apps -q .name || true)
+      if [[ ! ${GHREPONAME} = "multi-tenancy-gitops-apps" ]]; then
+        echo "Fork not found, creating fork and cloning"
+        gh repo fork cloud-native-toolkit-demos/multi-tenancy-gitops-apps --clone --org ${GIT_ORG} --remote
+        mv multi-tenancy-gitops-apps gitops-3-apps
+      elif [[ ! -d gitops-3-apps ]]; then
+        echo "Fork found, repo not cloned, cloning repo"
+        gh repo clone ${GIT_ORG}/multi-tenancy-gitops-apps gitops-3-apps
+      fi
+      cd gitops-3-apps
+      git remote set-url --push upstream no_push
+      git checkout ${GITOPS_BRANCH} || git checkout --track origin/${GITOPS_BRANCH}
+      cd ..
+
+      GHREPONAME=$(gh api /repos/${GIT_ORG}/ace-customer-details -q .name || true)
+      if [[ ! ${GHREPONAME} = "ace-customer-details" ]]; then
+        echo "Fork not found, creating fork and cloning"
+        gh repo fork cloud-native-toolkit-demos/ace-customer-details --clone --org ${GIT_ORG} --remote
+        mv ace-customer-details src-ace-app-customer-details
+      elif [[ ! -d src-ace-app-customer-details ]]; then
+        echo "Fork found, repo not cloned, cloning repo"
+        gh repo clone ${GIT_ORG}/ace-customer-details src-ace-app-customer-details
+      fi
+      cd src-ace-app-customer-details
+      git remote set-url --push upstream no_push
+      git checkout master || git checkout --track origin/${GITOPS_BRANCH}
+      cd ..
+
+    fi
+
     popd
 
 }
@@ -147,8 +168,8 @@ install_argocd () {
 delete_default_argocd_instance () {
     echo "Delete the default ArgoCD instance"
     pushd ${OUTPUT_DIR}
-    oc delete gitopsservice cluster -n openshift-gitops
-    oc delete argocd openshift-gitops -n openshift-gitops
+    oc delete gitopsservice cluster -n openshift-gitops || true
+    oc delete argocd openshift-gitops -n openshift-gitops || true
     popd
 }
 
@@ -285,38 +306,28 @@ init_sealed_secrets () {
 
 }
 
-ace_setup_apps_git () {
+ace_apps_bootstrap () {
   echo "Github user/org is ${GIT_ORG}"
 
-  if [ -z ${GIT_ORG} ]; then echo "Please set GIT_ORG when running script"; exit 1; fi
-  GIT_USER="${GIT_ORG}"
-
-  pushd ${OUTPUT_DIR}
-
-  source gitops-3-apps/scripts/ace-update-git.sh
-
-  popd
-
-}
-
-ace_setup_apps_kubeseal () {
-  echo "Running kubeseal for apps repo"
-
-  if [ -z ${GIT_ORG} ]; then echo "Please set GIT_ORG when running script"; exit 1; fi
-  GIT_USER="${GIT_ORG}"
+  if [ -z ${GIT_USER} ]; then echo "Please set GIT_USER when running script"; exit 1; fi
 
   if [ -z ${GIT_TOKEN} ]; then echo "Please set GIT_TOKEN when running script"; exit 1; fi
 
+  if [ -z ${GIT_ORG} ]; then echo "Please set GIT_ORG when running script"; exit 1; fi
+
   pushd ${OUTPUT_DIR}
 
-  source gitops-3-apps/scripts/ace-kubeseal.sh
+  source gitops-3-apps/scripts/ace-bootstrap.sh
 
   popd
+
 }
 
 print_urls_passwords () {
     echo "Openshift Console UI: $(oc whoami --show-console)"
-    echo "Openshift GitOps UI: $(oc get route -n openshift-gitops openshift-gitops-cntk-cluster -o template --template='https://{{.spec.host}}')"
+    echo " "
+    echo "Openshift GitOps UI: $(oc get route -n openshift-gitops openshift-gitops-cntk-server -o template --template='https://{{.spec.host}}')"
+    echo " "
     echo "To get the ArgoCD URL and admin password:"
     echo "-----"
     echo "oc get route -n openshift-gitops openshift-gitops-cntk-cluster -o template --template='https://{{.spec.host}}'"
@@ -356,9 +367,12 @@ deploy_bootstrap_argocd
 
 # Setup of apps repo
 
-ace_setup_apps_git
+if [[ "${CP_EXAMPLES}" == "true" ]]; then
+  echo "Bootstrap Cloud Pak examples"
 
-ace_setup_apps_kubeseal
+  ace_apps_bootstrap
+
+fi
 
 print_urls_passwords
 

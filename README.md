@@ -7,13 +7,32 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
 ### Prerequisites
 1. Install the OpenShift CLI `oc`, [download latest oc](https://mirror.openshift.com/pub/openshift-v4/clients/crc/latest/) version 4.7 or 4.8
 1. Create [Github](https://github.com) account
-2. Install the Github `gh` CLI and login https://github.com/cli/cli
-3. Create a new organization on github https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/creating-a-new-organization-from-scratch
-4. Create a [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-    - Select the check box **repo**
-    - Select the check box **admin:repo_hook**
+1. Install the Github `gh` CLI and login https://github.com/cli/cli
+1. Create a new organization on github https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/creating-a-new-organization-from-scratch
+1. Generate a [GitHub Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the following scopes
+    - [ ] repo
+        - [x] public_repo
+    - [ ] admin:repo_hook
+        - [x] write:repo_hook
+    <details>
+    <summary> View screen capture of scopes required </summary>
 
-### Setup
+    ![GitHub Token Scopes](doc/images/github-webhook.png)
+
+    </details>
+
+
+### Deploy the ACE operator and its pre-requisites
+- Make sure you are logged in OpenShift with admin rights
+    ```bash
+    oc login ...
+    ```
+
+- Log in with the Github CLI
+    ```bash
+    gh auth login
+    ```
+
 - Setup a local git directory to clone all the git repositories
     ```bash
     mkdir -p ace-production
@@ -27,9 +46,10 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     oc whoami --show-console
     ```
 
-- Run the bootstrap script, specify the git org `GIT_ORG`,the Github personal access token `GIT_TOKEN` and the output directory to clone all repos `OUTPUT_DIR`.You can use `DEBUG=true` for verbose output
+- Run the bootstrap script, specify the git user `GIT_USER`, the git org `GIT_ORG`,the Github personal access token `GIT_TOKEN` and the output directory to clone all repos `OUTPUT_DIR`.You can use `DEBUG=true` for verbose output
     ```bash
     curl -sfL https://raw.githubusercontent.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace/ocp47-2021-2/scripts/bootstrap.sh | \
+    GIT_USER=$REPLACE_WITH_GIT_USER \
     GIT_ORG=$REPLACE_WITH_GIT_ORG \
     GIT_TOKEN=$REPLACE_WITH_GIT_TOKEN \
     OUTPUT_DIR=scripts/test \
