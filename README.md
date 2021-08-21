@@ -66,6 +66,18 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     code ace-production
     ```
 
+- To extract the url and password you can use the following commands
+    ```bash
+    echo "The ArgoCD URL and admin password:"
+    oc get route -n openshift-gitops openshift-gitops-cntk-server -o template --template='https://{{.spec.host}}'
+    oc extract secrets/openshift-gitops-cntk-cluster --keys=admin.password -n openshift-gitops --to=-
+    echo "----"
+    echo "The Cloud Pak console and admin password"
+    oc get route -n ibm-common-services cp-console -o template --template='https://{{.spec.host}}'
+    oc extract -n ibm-common-services secrets/platform-auth-idp-credentials --keys=admin_username,admin_password --to=-
+    ```
+
+
 
 - The following git repositories will be fork into a new github organization
     - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace
