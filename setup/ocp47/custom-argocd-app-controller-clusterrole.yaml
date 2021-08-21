@@ -218,3 +218,15 @@ rules:
       - processmining.ibm.com
     resources:
       - processminings
+  - verbs:
+      - '*'
+    apiGroups:
+      - operator.ibm.com
+    resources:
+      - commonservices
+  - verbs:
+      - '*'
+    apiGroups:
+      - mq.ibm.com
+    resources:
+      - queuemanagers

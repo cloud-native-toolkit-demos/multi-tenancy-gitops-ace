@@ -42,7 +42,13 @@ fi
 mkdir -p "${OUTPUT_DIR}"
 
 
+SEALED_SECRET_KEY_FILE=${SEALED_SECRET_KEY_FILE:-~/Downloads/sealed-secrets-ibm-demo-key.yaml}
 
+if [[ ! -f ${SEALED_SECRET_KEY_FILE} ]]; then
+  echo "File Not Found: ${SEALED_SECRET_KEY_FILE}"
+
+  exit 1
+fi
 
 GITOPS_PROFILE=${GITOPS_PROFILE:-0-bootstrap/argocd/single-cluster/bootstrap.yaml}
 
@@ -117,6 +123,13 @@ fork_repos () {
 
 
 
+init_sealed_secrets () {
+    echo "Intializing sealed secrets with file ${SEALED_SECRET_KEY_FILE}"
+    oc new-project sealed-secrets || true
+
+    oc apply -f ${SEALED_SECRET_KEY_FILE}
+}
+
 install_pipelines () {
   echo "Installing OpenShift Pipelines Operator"
   oc apply -n openshift-operators -f https://raw.githubusercontent.com/cloud-native-toolkit/multi-tenancy-gitops-services/master/operators/openshift-pipelines/operator.yaml
@@ -128,6 +141,23 @@ install_argocd () {
     oc apply -f gitops-0-bootstrap-ace/setup/ocp47/
     while ! oc wait crd applications.argoproj.io --timeout=-1s --for=condition=Established  2>/dev/null; do sleep 30; done
     while ! oc wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n openshift-gitops > /dev/null; do sleep 30; done
+    popd
+}
+
+delete_default_argocd_instance () {
+    echo "Delete the default ArgoCD instance"
+    pushd ${OUTPUT_DIR}
+    oc delete gitopsservice cluster -n openshift-gitops
+    oc delete argocd openshift-gitops -n openshift-gitops
+    popd
+}
+
+create_custom_argocd_instance () {
+    echo "Create a custom ArgoCD instance with custom checks"
+    pushd ${OUTPUT_DIR}
+
+    oc apply -f gitops-0-bootstrap-ace/setup/ocp47/argocd-instance/ -n openshift-gitops
+    while ! oc wait pod --timeout=-1s --for=condition=ContainersReady -l app.kubernetes.io/name=openshift-gitops-cntk-server -n openshift-gitops > /dev/null; do sleep 30; done
     popd
 }
 
@@ -307,9 +337,13 @@ install_pipelines
 
 install_argocd
 
-gen_argocd_patch
+#gen_argocd_patch
 
-patch_argocd
+#patch_argocd
+
+delete_default_argocd_instance
+
+create_custom_argocd_instance
 
 create_argocd_git_override_configmap
 
