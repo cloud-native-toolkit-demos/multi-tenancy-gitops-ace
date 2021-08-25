@@ -1,8 +1,0 @@
-resources:
-#- argocd/ace/cicd.yaml
-
-#- argocd/mq/cicd.yaml
-
-#- argocd/apic/cicd.yaml
-
-#- argocd/bookinfo/cicd.yaml

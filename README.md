@@ -48,17 +48,12 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
 
 - Run the bootstrap script, specify the git user `GIT_USER`, the git org `GIT_ORG`,the Github personal access token `GIT_TOKEN` and the output directory to clone all repos `OUTPUT_DIR`.You can use `DEBUG=true` for verbose output
     ```bash
-    curl -sfL https://raw.githubusercontent.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace/ocp47-2021-2/scripts/bootstrap.sh | \
+    curl -sfL https://raw.githubusercontent.com/cloud-native-toolkit/multi-tenancy-gitops/master/scripts/bootstrap.sh | \
     GIT_USER=$REPLACE_WITH_GIT_USER \
     GIT_ORG=$REPLACE_WITH_GIT_ORG \
     GIT_TOKEN=$REPLACE_WITH_GIT_TOKEN \
-    OUTPUT_DIR=scripts/test \
+    OUTPUT_DIR=ace-production \
     sh
-    ```
-
-- When the script is done it prints the ArgoCD UI url that you can open in your browser. To login use the user name `admin` and to get the password use the following command:
-    ```bash
-    oc extract secrets/openshift-gitops-cluster --keys=admin.password -n openshift-gitops --to=-
     ```
 
 - You can open the output directory containing all the git repositories with VSCode
@@ -80,10 +75,10 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
 
 
 - The following git repositories will be fork into a new github organization
-    - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace
-    - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps
+    - https://github.com/cloud-native-toolkit/multi-tenancy-gitops
     - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-infra
     - https://github.com/cloud-native-toolkit/multi-tenancy-gitops-services
+    - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps
 
 ### References
 - This repository shows the reference architecture for gitops directory structure for more info https://cloudnativetoolkit.dev/learning/gitops-int/gitops-with-cloud-native-toolkit
