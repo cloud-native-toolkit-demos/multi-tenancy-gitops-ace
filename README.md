@@ -48,7 +48,7 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
 
 - Run the bootstrap script, specify the git user `GIT_USER`, the git org `GIT_ORG`,the Github personal access token `GIT_TOKEN` and the output directory to clone all repos `OUTPUT_DIR`.You can use `DEBUG=true` for verbose output
     ```bash
-    curl -sfL https://raw.githubusercontent.com/cloud-native-toolkit/multi-tenancy-gitops/master/scripts/bootstrap.sh | \
+    curl -sfL https://raw.githubusercontent.com/cloud-native-toolkit-demos/multi-tenancy-gitops-ace/master/scripts/bootstrap.sh | \
     GIT_USER=$REPLACE_WITH_GIT_USER \
     GIT_ORG=$REPLACE_WITH_GIT_ORG \
     GIT_TOKEN=$REPLACE_WITH_GIT_TOKEN \
