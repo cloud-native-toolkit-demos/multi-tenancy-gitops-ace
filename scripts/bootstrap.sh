@@ -18,5 +18,5 @@ CP_EXAMPLES=${CP_EXAMPLES:-true}
 ACE_SCENARIO=${ACE_SCENARIO:-true}
 
 TEMP_SCRIPT=$(mktemp)
-curl -sfL https://raw.githubusercontent.com/cloud-native-toolkit/multi-tenancy-gitops/handle-tools-secret/scripts/bootstrap.sh > ${TEMP_SCRIPT}
+curl -sfL https://raw.githubusercontent.com/cloud-native-toolkit/multi-tenancy-gitops/master/scripts/bootstrap.sh > ${TEMP_SCRIPT}
 source ${TEMP_SCRIPT}
