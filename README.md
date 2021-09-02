@@ -6,14 +6,17 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
 
 ### Prerequisites
 1. Install the OpenShift CLI `oc`, [download latest oc](https://mirror.openshift.com/pub/openshift-v4/clients/crc/latest/) version 4.7 or 4.8
+1. Install [kubeseal](https://github.com/bitnami-labs/sealed-secrets#homebrew) CLI
 1. Create [Github](https://github.com) account
 1. Install the Github `gh` CLI and login https://github.com/cli/cli
 1. Create a new organization on github https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/creating-a-new-organization-from-scratch
 1. Generate a [GitHub Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the following scopes
-    - [ ] repo
-        - [x] public_repo
-    - [ ] admin:repo_hook
-        - [x] write:repo_hook
+    - [x] repo
+    - [ ] admin:org
+        - [x] read:org
+    - [x] admin:repo_hook
+    - [x] admin:org_hook
+
     <details>
     <summary> View screen capture of scopes required </summary>
 
@@ -28,6 +31,11 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     oc login ...
     ```
 
+- Make sure you are connected to the correct OpenShift cluster
+    ```bash
+    oc whoami --show-console
+    ```
+
 - Log in with the Github CLI
     ```bash
     gh auth login
@@ -38,13 +46,7 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     mkdir -p ace-production
     ```
 
-
 - Download [sealed-secrets-ibm-demo-key.yaml](https://bit.ly/demo-sealed-master) and save in the default location `~/Downloads/sealed-secrets-ibm-demo-key.yaml`. You can override the location when running the script with `SEALED_SECRET_KEY_FILE`. Remember do not check this file to git.
-
-- Make sure you are connected to the correct OpenShift cluster
-    ```bash
-    oc whoami --show-console
-    ```
 
 - Run the bootstrap script, specify the git user `GIT_USER`, the git org `GIT_ORG`,the Github personal access token `GIT_TOKEN` and the output directory to clone all repos `OUTPUT_DIR`.You can use `DEBUG=true` for verbose output
     ```bash
@@ -81,5 +83,5 @@ This demo repo have a default selection to deploy IBM App Connect (ACE).
     - https://github.com/cloud-native-toolkit-demos/multi-tenancy-gitops-apps
 
 ### References
-- This repository shows the reference architecture for gitops directory structure for more info https://cloudnativetoolkit.dev/learning/gitops-int/gitops-with-cloud-native-toolkit
+- This repository shows the reference architecture for gitops directory structure for more info https://cloudnativetoolkit.dev/adopting/use-cases/gitops/gitops-ibm-cloud-paks/
 
